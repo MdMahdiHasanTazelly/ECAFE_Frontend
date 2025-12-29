@@ -1,17 +1,32 @@
 import "./login.css";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 import React, { useState } from 'react';
 
 
 const Login = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         // Handle login logic here
-        console.log({ email, password, rememberMe });
+        // console.log({ email, password }, process.env.REACT_APP_BACKEND_URL);
+
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, { email, password })
+            .then((res) => {
+                localStorage.setItem('token', res.data.token);
+
+                navigate("/menu");
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+        setEmail("");
+        setPassword("");
     };
 
     return (
@@ -49,16 +64,7 @@ const Login = () => {
                         />
                     </div>
 
-                    <div className="form-options">
-                        <label className="checkbox-label">
-                            <input
-                                type="checkbox"
-                                checked={rememberMe}
-                                onChange={(e) => setRememberMe(e.target.checked)}
-                                className="checkbox-input"
-                            />
-                        </label>
-                    </div>
+
 
                     <button type="submit" className="login-button">
                         Login

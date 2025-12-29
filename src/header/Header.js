@@ -1,10 +1,30 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
 
+  const navigate = useNavigate();
   const location = useLocation();
+
+
+  const logoutHandler = (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/logout`, { token })
+      .then((res) => {
+        console.log(res.data.message);
+        localStorage.removeItem("token");
+        navigate("/menu");
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
 
   return (
     <header className="site-header">
@@ -21,9 +41,24 @@ const Header = () => {
           <nav className="main-nav">
             <a href="/" className="nav-link">Home</a>
             <a href="/menu" className="nav-link">Shop</a>
-            {location.pathname != '/login' && <a href="/login" className="nav-link">Login</a>}
 
-            {location.pathname != '/register' && <a href="/register" className="nav-link">Register</a>}
+            {localStorage.getItem("token") &&
+              <button style={{ all: "unset" }}
+                onClick={logoutHandler}
+              >
+                <a href="/menu" className="nav-link">
+                  Logout
+                </a>
+
+              </button>
+            }
+
+
+            {(location.pathname != '/login' && !localStorage.getItem("token")) &&
+              <a href="/login" className="nav-link">Login</a>}
+
+            {(location.pathname != '/register' && !localStorage.getItem("token")) &&
+              <a href="/register" className="nav-link">Register</a>}
 
           </nav>
 

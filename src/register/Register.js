@@ -1,19 +1,38 @@
 import "./Register.css";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 import React, { useState } from 'react';
 
 
 const Register = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         // Handle login logic here
-        console.log({ email, password, rememberMe });
+        // console.log({ email, password, username });
+
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/register`, { username, email, password })
+            .then((res) => {
+                localStorage.setItem('token', res.data.token);
+
+                navigate("/menu");
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+
+
+        setEmail("");
+        setPassword("");
+        setUsername("");
     };
+
 
     return (
         <div className="login-container">
@@ -64,17 +83,7 @@ const Register = () => {
                         />
                     </div>
 
-                    <div className="form-options">
-                        <label className="checkbox-label">
-                            <input
-                                type="checkbox"
-                                checked={rememberMe}
-                                onChange={(e) => setRememberMe(e.target.checked)}
-                                className="checkbox-input"
-                            />
 
-                        </label>
-                    </div>
 
                     <button type="submit" className="login-button">
                         Register
