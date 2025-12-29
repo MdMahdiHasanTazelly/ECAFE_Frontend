@@ -1,11 +1,12 @@
-import "./login.css";
+import "./Register.css";
 
 import React, { useState } from 'react';
 
 
-const Login = () => {
+const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
 
     const handleSubmit = (e) => {
@@ -22,11 +23,24 @@ const Login = () => {
                 </div>
 
                 <div className="welcome-section">
-                    <h2 className="welcome-title">Welcome Back!</h2>
-                    <p className="welcome-subtitle">Please login to your account</p>
+                    <p className="welcome-subtitle">Please Register</p>
                 </div>
 
+
+
                 <form className="login-form" onSubmit={handleSubmit}>
+
+                    <div className="form-group">
+                        <input
+                            type="username"
+                            placeholder="Username"
+                            className="form-input"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+
                     <div className="form-group">
                         <input
                             type="email"
@@ -37,6 +51,7 @@ const Login = () => {
                             required
                         />
                     </div>
+
 
                     <div className="form-group">
                         <input
@@ -57,16 +72,20 @@ const Login = () => {
                                 onChange={(e) => setRememberMe(e.target.checked)}
                                 className="checkbox-input"
                             />
+
                         </label>
                     </div>
 
                     <button type="submit" className="login-button">
-                        Login
+                        Register
                     </button>
 
                     <div className="login-footer">
                         <a href="#" className="footer-link">Forgot password?</a>
-                        <span className="footer-text">Don't have an account? <a href="/register" className="footer-link">Register</a></span>
+                        <span className="footer-text">
+                            Already have an account? <a href="/login" className="footer-link">Login</a>
+                        </span>
+
                     </div>
                 </form>
             </div>
@@ -74,4 +93,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;
