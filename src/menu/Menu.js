@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './Menu.css';
 
 const menuItems = [
@@ -54,40 +55,81 @@ const menuItems = [
 ];
 
 const Menu = () => {
-    const [quantities, setQuantities] = useState(menuItems.reduce((acc, item) => ({ ...acc, [item.id]: 1 }), {}));
+
+    const [foods, setFoods] = useState([]);
+    const [quantity, setQuantity] = useState({});
+    const [cartItem, setCartItem] = useState([]);
+
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getAllFood`)
+            .then((res) => {
+                setFoods(res.data);
+                // console.log(res.data);
+
+                const initQuantity = {};
+                res.data.forEach(item => {
+                    initQuantity[item._id] = 0;
+                });
+                setQuantity(initQuantity);
+            })
+            .catch((error) => {
+                console.log(error);
+
+            })
+
+    }, []);
 
     const handleQuantityChange = (id, delta) => {
-        setQuantities(prev => ({
+        setQuantity(prev => ({
             ...prev,
-            [id]: Math.max(0, prev[id] + delta),
+            [id]: Math.max(0, (prev[id]) + delta) // Prevent negative
         }));
     };
+
+    const handleAddToCart = (id) => {
+        const token = localStorage.getItem("token");
+        console.log(token);
+        // console.log(`add to cart`, id)
+        setCartItem(item => [...item, id]);
+
+        console.log(cartItem)
+    }
+
+
 
     return (
         <div className="breakfast-menu">
 
 
             <div className="menu-grid">
-                {menuItems.map(item => (
-                    <div key={item.id} className={`menu-card ${item.id > 4 ? 'teaser' : ''}`}>
-                        {item.discount && <span className="discount-badge">-{item.discount}</span>}
+                {foods.map(item => (
+                    <div key={item._id} className='menu-card '>
+                        {/* {item.discount && <span className="discount-badge">-{item.discount}</span>} */}
                         <img src={item.image} alt={item.title} className="menu-image" />
                         <h3 className="menu-title">{item.title || '\u00A0'}</h3>
                         <div className="price">
                             {item.originalPrice && <span className="original-price">৳{item.originalPrice}</span>}
                             <span className="discounted-price">৳{item.discountedPrice}</span>
                         </div>
-                        {item.id <= 4 && (
-                            <div className="actions">
-                                <div className="quantity-selector">
-                                    <button onClick={() => handleQuantityChange(item.id, -1)}>-</button>
-                                    <span>{quantities[item.id]}</span>
-                                    <button onClick={() => handleQuantityChange(item.id, 1)}>+</button>
-                                </div>
-                                <button className="favorite-btn">❤️</button>
-                                <button className="cart-btn">🛒</button>
+
+                        <div className="actions">
+                            <div className="quantity-selector">
+                                <button onClick={() => handleQuantityChange(item._id, -1)}>-</button>
+                                <span>{quantity[item._id] || 0}</span>
+                                <button onClick={() => handleQuantityChange(item._id, 1)}>+</button>
                             </div>
-                        )}
+                            {/* favourite */}
+                            <button className="favorite-btn">
+                                <i style={{ color: "#28a745" }} class="bi bi-suit-heart"></i>
+                            </button>
+                            {/* add to cart */}
+                            <button className="cart-btn"
+                                onClick={() => handleAddToCart(item._id)}
+                            >
+                                <i style={{ color: "#28a745" }} class="bi bi-cart-plus"></i>
+                            </button>
+                        </div>
+
                     </div>
                 ))}
             </div>

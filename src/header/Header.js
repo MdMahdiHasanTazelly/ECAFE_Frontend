@@ -82,7 +82,8 @@ const Header = () => {
                   <i class="bi bi-bell"></i>
                 </button>
                 <button aria-label="Favorites">
-                  <i class="bi bi-suit-heart"></i>
+                  <i class="bi bi-heart-fill"></i>
+                  {/* <i class="bi bi-suit-heart"></i> */}
                 </button>
                 <button aria-label="Cart">
                   <i class="bi bi-cart-plus-fill"></i>
