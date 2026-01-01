@@ -13,7 +13,9 @@ function App() {
   return (
     <div className="App">
 
-      <Header />
+      {/* <Header /> */}
+
+      {["/", '/login', '/register'].includes(location.pathname) && <Header />}
 
       <main className="main-content">
 
