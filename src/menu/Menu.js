@@ -71,7 +71,6 @@ const Menu = () => {
                 console.log(error);
             })
 
-
     }
 
 

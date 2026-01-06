@@ -3,22 +3,28 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CartSidebar from '../cartSidebar/CartSidebar.js';
+import UserProfilePopup from '../userProfile/UserProfilepopUp.js';
 import './Header.css';
+
 
 const Header = ({ cartItems, userId }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+
 
     const logoutHandler = (e) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/logout`, { token })
-            .then(() => {
+            .then((res) => {
                 localStorage.removeItem("token");
                 window.location.reload();
             })
-            .catch(console.log);
+            .catch((error) => {
+                console.log(error)
+            });
     };
 
     return (
@@ -35,11 +41,11 @@ const Header = ({ cartItems, userId }) => {
                             <a href="/" className="nav-link">Home</a>
                             <a href="/menu" className="nav-link">Shop</a>
 
-                            {localStorage.getItem("token") && (
+                            {/* {localStorage.getItem("token") && (
                                 <button style={{ all: "unset" }} onClick={logoutHandler}>
                                     <a href="/menu" className="nav-link">Logout</a>
                                 </button>
-                            )}
+                            )} */}
 
                             {(location.pathname !== '/login' && !localStorage.getItem("token")) && (
                                 <a href="/login" className="nav-link">Login</a>
@@ -88,7 +94,35 @@ const Header = ({ cartItems, userId }) => {
                                             }
                                         </button>
 
-                                        <button aria-label="User Profile"><i className="bi bi-person-circle"></i></button>
+                                        {/* <button aria-label="User Profile">
+                                            <i className="bi bi-person-circle"></i>
+                                        </button> */}
+
+
+
+
+                                        {/* USER PROFILE */}
+                                        <div style={{ position: "relative" }}>
+                                            <button
+                                                aria-label="User Profile"
+                                                onClick={() => setIsProfileOpen(prev => !prev)}
+                                            >
+                                                <i className="bi bi-person-circle"></i>
+                                            </button>
+
+                                            {isProfileOpen && (
+                                                <UserProfilePopup
+                                                    userId={userId}
+                                                    onClose={() => setIsProfileOpen(false)}
+                                                    onLogout={logoutHandler}
+                                                />
+                                            )}
+                                        </div>
+
+
+
+
+
                                     </div>
                                 }
 
