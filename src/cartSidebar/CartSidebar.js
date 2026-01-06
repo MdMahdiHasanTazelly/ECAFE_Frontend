@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './CartSidebar.css';
 import axios from 'axios';
 
-const CartSidebar = ({ isOpen, onClose, cartItems, userId, onRemoveItem, onUpdateQuantity }) => {
+const CartSidebar = ({ isOpen, onClose }) => {
 
     const [orders, setOrders] = useState([]);
 
@@ -11,8 +11,6 @@ const CartSidebar = ({ isOpen, onClose, cartItems, userId, onRemoveItem, onUpdat
 
 
     useEffect(() => {
-
-        // const token = localStorage.getItem("token");
 
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/get-orders`, { token })
             .then((res) => {
@@ -23,26 +21,41 @@ const CartSidebar = ({ isOpen, onClose, cartItems, userId, onRemoveItem, onUpdat
                 console.log(error);
             })
 
-        //const orders = 
-
     }, []);
 
 
     const quantityUpdatehandler = (itemId, quantity) => {
-        console.log(quantity, "--------", itemId);
+
+        // console.log(quantity, "--------", itemId);
+
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/update-quantity`, { quantity, itemId, token })
+            .then((res) => {
+                // console.log(res);
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
     }
 
 
 
-    // const handleRemove = async (orderId) => {
-    //     const token = localStorage.getItem('token');
-    //     try {
-    //         await axios.post(`${process.env.REACT_APP_BACKEND_URL}/remove-from-cart`, { token, orderId });
-    //         onRemoveItem(orderId);
-    //     } catch (err) {
-    //         console.error("Failed to remove item:", err);
-    //     }
-    // };
+    const handleRemove = async (orderId) => {
+        const token = localStorage.getItem('token');
+        try {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/remove-from-cart`, { token, orderId })
+                .then((res) => {
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+            // onRemoveItem(orderId);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     if (!isOpen) return null;
 
@@ -72,15 +85,15 @@ const CartSidebar = ({ isOpen, onClose, cartItems, userId, onRemoveItem, onUpdat
                                     <p className="price">৳{item.foodId.discountedPrice || item.foodId.originalPrice}</p>
                                     <div className="quantity-controls">
                                         {/* <button onClick={() => onUpdateQuantity(item._id, -1)} disabled={item.quantity <= 1}>-</button> */}
-                                        <button onClick={() => quantityUpdatehandler(item._id, -1)} disabled={item.quantity <= 1}>-</button>
+                                        <button onClick={() => quantityUpdatehandler(item.foodId._id, -1)} disabled={item.quantity <= 1}>-</button>
                                         <span>{item.quantity}</span>
                                         {/* <button onClick={() => onUpdateQuantity(item._id, 1)}>+</button> */}
-                                        <button onClick={() => quantityUpdatehandler(item._id, 1)}>+</button>
+                                        <button onClick={() => quantityUpdatehandler(item.foodId._id, 1)}>+</button>
                                     </div>
                                 </div>
                                 <button
                                     className="remove-item-btn"
-                                    // onClick={() => handleRemove(item._id)}
+                                    onClick={() => handleRemove(item._id)}
                                     aria-label="Remove item"
                                 >
                                     <i className="bi bi-trash"></i>

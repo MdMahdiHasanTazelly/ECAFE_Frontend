@@ -16,18 +16,21 @@ const Menu = () => {
 
     const [userId, setUserId] = useState("");
 
+    const token = localStorage.getItem('token');
+
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        //const token = localStorage.getItem('token');
 
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/getAllFood`, { token })
             .then((res) => {
                 //console.log(res);
+                //when user logged in, if executes
                 if (res.data.foods && res.data.favourites && res.data.orders && res.data.userId) {
                     setFoods(res.data.foods);
                     setFavourites(res.data.favourites);
                     setCartItems(res.data.orders);
                     setUserId(res.data.userId);
-                } else {
+                } else { //when user is not logged in
                     setFoods(res.data);
                 }
 
@@ -49,7 +52,7 @@ const Menu = () => {
 
         setQuantity(prev => ({
             ...prev,
-            [id]: Math.max(0, (prev[id]) + delta) // Prevent negative
+            [id]: Math.max(0, (prev[id]) + delta) // prevent negative
         }));
     };
 
@@ -57,14 +60,12 @@ const Menu = () => {
 
     const handleAddToCart = (foodId) => {
 
-        const token = localStorage.getItem("token");
-
         const itemQuantity = quantity[foodId];
 
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/add-to-cart`, { token, foodId, itemQuantity })
             .then((res => {
                 window.location.reload();
-                console.log(res);
+                //console.log(res);
             }))
             .catch((error) => {
                 console.log(error);
@@ -75,17 +76,30 @@ const Menu = () => {
 
 
     const handleAddToFavourite = (foodId) => {
-        const token = localStorage.getItem("token");
 
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/add-to-favourite`, { token, foodId })
             .then((res => {
-                setFavourites(res.data);
-                //window.location.reload();
-                console.log(res);
+                setFavourites(res.data.favourites);
+                window.location.reload();
+                //console.log(res);
             }))
             .catch((error) => {
                 console.log(error);
             })
+    }
+
+
+    const handleRemoveFromFavourite = (foodId) => {
+
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/remove-from-favourite`, { token, foodId })
+            .then((res) => {
+                setFavourites(res.data.favourites);
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+        //console.log(foodId);
     }
 
 
@@ -113,12 +127,15 @@ const Menu = () => {
                                     <button onClick={() => handleQuantityChange(item._id, 1)}>+</button>
                                 </div>
                                 {/* favourite */}
-                                <button className="favorite-btn"
-                                    onClick={() => handleAddToFavourite(item._id)}
-                                >
+                                <button className="favorite-btn"                                >
                                     {(favourites.includes(item._id)) ?
-                                        <i class="bi bi-heart-fill" style={{ color: "#28a745" }}></i> :
-                                        <i style={{ color: "#28a745" }} class="bi bi-suit-heart"></i>
+                                        <i class="bi bi-heart-fill" style={{ color: "#28a745" }}
+                                            onClick={() => handleRemoveFromFavourite(item._id)}
+                                        ></i> :
+
+                                        <i style={{ color: "#28a745" }} class="bi bi-suit-heart"
+                                            onClick={() => handleAddToFavourite(item._id)}
+                                        ></i>
                                     }
 
                                 </button>
