@@ -4,12 +4,16 @@ import { useNavigate } from "react-router-dom";
 
 import React, { useState } from 'react';
 
+import { useNotification } from '../context/NotificationContext.js';
+
 
 const Register = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
+
+    const { showSuccess, showError } = useNotification();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -19,10 +23,11 @@ const Register = () => {
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/register`, { username, email, password })
             .then((res) => {
                 localStorage.setItem('token', res.data.token);
-
                 navigate("/menu");
+                showSuccess(res.data.message);
             })
             .catch((error) => {
+                showError(error.response.data.message);
                 console.log(error);
             })
 

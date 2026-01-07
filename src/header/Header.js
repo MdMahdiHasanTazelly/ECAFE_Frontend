@@ -6,6 +6,8 @@ import CartSidebar from '../cartSidebar/CartSidebar.js';
 import UserProfilePopup from '../userProfile/UserProfilepopUp.js';
 import './Header.css';
 
+import { useNotification } from '../context/NotificationContext.js';
+
 
 const Header = ({ cartItems, userId }) => {
     const navigate = useNavigate();
@@ -13,6 +15,7 @@ const Header = ({ cartItems, userId }) => {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
+    const { showSuccess, showError } = useNotification();
 
     const logoutHandler = (e) => {
         e.preventDefault();
@@ -20,9 +23,13 @@ const Header = ({ cartItems, userId }) => {
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/logout`, { token })
             .then((res) => {
                 localStorage.removeItem("token");
-                window.location.reload();
+                showSuccess(res.data.message);
+                setInterval(() => {
+                    window.location.reload();
+                }, 1100);
             })
             .catch((error) => {
+                showError(error.response.data.message);
                 console.log(error)
             });
     };
@@ -41,12 +48,7 @@ const Header = ({ cartItems, userId }) => {
                             <a href="/" className="nav-link">Home</a>
                             <a href="/menu" className="nav-link">Shop</a>
 
-                            {/* {localStorage.getItem("token") && (
-                                <button style={{ all: "unset" }} onClick={logoutHandler}>
-                                    <a href="/menu" className="nav-link">Logout</a>
-                                </button>
-                            )} */}
-
+                            
                             {(location.pathname !== '/login' && !localStorage.getItem("token")) && (
                                 <a href="/login" className="nav-link">Login</a>
                             )}

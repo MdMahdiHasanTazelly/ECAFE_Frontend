@@ -4,7 +4,13 @@ import './Menu.css';
 import Header from '../header/Header.js';
 
 
+import { useNotification } from '../context/NotificationContext.js';
+
+
 const Menu = () => {
+
+    const { showSuccess, showError } = useNotification();
+
 
     const [foods, setFoods] = useState([]);
     const [quantity, setQuantity] = useState({});
@@ -64,10 +70,16 @@ const Menu = () => {
 
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/add-to-cart`, { token, foodId, itemQuantity })
             .then((res => {
-                window.location.reload();
-                //console.log(res);
+                showSuccess(res.data.message);
+                setCartItems(prev => [...prev, res.data.order]);
+
+                setInterval(() => {
+                    window.location.reload();
+                }, 1100);
+
             }))
             .catch((error) => {
+                showError(error.response.data.message);
                 console.log(error);
             })
 
@@ -78,11 +90,12 @@ const Menu = () => {
 
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/add-to-favourite`, { token, foodId })
             .then((res => {
+                showSuccess(res.data.message);
                 setFavourites(res.data.favourites);
-                window.location.reload();
-                //console.log(res);
+
             }))
             .catch((error) => {
+                showError(error.response.data.message);
                 console.log(error);
             })
     }
@@ -92,10 +105,11 @@ const Menu = () => {
 
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/remove-from-favourite`, { token, foodId })
             .then((res) => {
+                showSuccess(res.data.message);
                 setFavourites(res.data.favourites);
-                window.location.reload();
             })
             .catch((error) => {
+                showError(error.response.data.message);
                 console.log(error);
             })
         //console.log(foodId);

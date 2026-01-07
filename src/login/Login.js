@@ -4,25 +4,27 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from 'react';
 
 import React, { useState } from 'react';
-
+import { useNotification } from '../context/NotificationContext.js';
 
 const Login = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const { showSuccess, showError } = useNotification();
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle login logic here
-        // console.log({ email, password }, process.env.REACT_APP_BACKEND_URL);
 
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, { email, password })
             .then((res) => {
                 localStorage.setItem('token', res.data.token);
-
                 navigate("/menu");
+                showSuccess(res.data.message);
+
             })
             .catch((error) => {
+                showError(error.response.data.message);
                 console.log(error);
             })
 

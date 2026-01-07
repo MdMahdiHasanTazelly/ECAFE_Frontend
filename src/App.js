@@ -7,32 +7,43 @@ import Menu from "./menu/Menu.js";
 import Register from "./register/Register.js";
 
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { NotificationProvider } from "./context/NotificationContext";
+
+
 function App() {
   const location = useLocation();
 
   return (
-    <div className="App">
+    <NotificationProvider>
+      <div className="App">
 
-      {/* <Header /> */}
+        {/* <Header /> */}
 
-      {["/", '/login', '/register'].includes(location.pathname) && <Header />}
+        {["/", '/login', '/register'].includes(location.pathname) && <Header />}
 
-      <main className="main-content">
+        <main className="main-content">
 
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/menu" element={<Menu />} />
-        </Routes>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/menu" element={<Menu />} />
+          </Routes>
 
-      </main>
+        </main>
 
-      {!['/login', '/register'].includes(location.pathname) && <Footer />}
+        {!['/login', '/register'].includes(location.pathname) && <Footer />}
 
 
 
-    </div>
+      </div>
+
+
+      <ToastContainer position="top-center" autoClose={1000} />
+
+    </NotificationProvider>
   );
 }
 

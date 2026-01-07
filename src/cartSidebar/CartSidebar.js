@@ -3,7 +3,12 @@ import React, { useEffect, useState } from 'react';
 import './CartSidebar.css';
 import axios from 'axios';
 
+import { useNotification } from '../context/NotificationContext.js';
+
+
 const CartSidebar = ({ isOpen, onClose }) => {
+
+    const { showSuccess, showError } = useNotification();
 
     const [orders, setOrders] = useState([]);
 
@@ -26,14 +31,16 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
     const quantityUpdatehandler = (itemId, quantity) => {
 
-        // console.log(quantity, "--------", itemId);
-
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/update-quantity`, { quantity, itemId, token })
             .then((res) => {
-                // console.log(res);
-                window.location.reload();
+                showSuccess(res.data.message);
+                setInterval(() => {
+                    window.location.reload();
+                }, 1100);
+
             })
             .catch((error) => {
+                showError(error.response.data.message);
                 console.log(error);
             })
 
@@ -46,9 +53,13 @@ const CartSidebar = ({ isOpen, onClose }) => {
         try {
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/remove-from-cart`, { token, orderId })
                 .then((res) => {
-                    window.location.reload();
+                    showSuccess(res.data.message);
+                    setInterval(() => {
+                        window.location.reload();
+                    }, 1100);
                 })
                 .catch((error) => {
+                    showError(error.response.data.message);
                     console.log(error);
                 })
             // onRemoveItem(orderId);
@@ -84,10 +95,10 @@ const CartSidebar = ({ isOpen, onClose }) => {
                                     <h4>{item.foodId.title}</h4>
                                     <p className="price">৳{item.foodId.discountedPrice || item.foodId.originalPrice}</p>
                                     <div className="quantity-controls">
-                                        {/* <button onClick={() => onUpdateQuantity(item._id, -1)} disabled={item.quantity <= 1}>-</button> */}
+
                                         <button onClick={() => quantityUpdatehandler(item.foodId._id, -1)} disabled={item.quantity <= 1}>-</button>
                                         <span>{item.quantity}</span>
-                                        {/* <button onClick={() => onUpdateQuantity(item._id, 1)}>+</button> */}
+
                                         <button onClick={() => quantityUpdatehandler(item.foodId._id, 1)}>+</button>
                                     </div>
                                 </div>
@@ -110,7 +121,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
                             <strong>
                                 ৳{orders.reduce((sum, order) => sum + (order.foodId.discountedPrice * order.quantity), 0)}
                             </strong>
-                            {/* <strong>৳{totalPrice}</strong> */}
+
                         </div>
                         <button className="checkout-btn">Proceed to Checkout</button>
                     </div>
