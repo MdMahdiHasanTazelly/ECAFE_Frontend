@@ -26,7 +26,6 @@ const Menu = () => {
     const token = localStorage.getItem('token');
 
     useEffect(() => {
-        //const token = localStorage.getItem('token');
 
         // axios.post(`${process.env.REACT_APP_BACKEND_URL}/getAllFood`, { token })
         axiosInstance.post(`/getAllFood`, { token })
@@ -76,9 +75,9 @@ const Menu = () => {
                 showSuccess(res.data.message);
                 setCartItems(prev => [...prev, res.data.order]);
 
-                // setInterval(() => {
-                //     window.location.reload();
-                // }, 1100);
+                setInterval(() => {
+                    window.location.reload();
+                }, 1100);
 
             }))
             .catch((error) => {

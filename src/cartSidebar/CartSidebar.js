@@ -38,9 +38,9 @@ const CartSidebar = ({ isOpen, onClose }) => {
         axiosInstance.post(`/update-quantity`, { quantity, itemId, token })
             .then((res) => {
                 showSuccess(res.data.message);
-                // setInterval(() => {
-                //     window.location.reload();
-                // }, 1100);
+                setInterval(() => {
+                    window.location.reload();
+                }, 1100);
 
             })
             .catch((error) => {
@@ -59,9 +59,9 @@ const CartSidebar = ({ isOpen, onClose }) => {
             axiosInstance.post(`/remove-from-cart`, { token, orderId })
                 .then((res) => {
                     showSuccess(res.data.message);
-                    // setInterval(() => {
-                    //     window.location.reload();
-                    // }, 1100);
+                    setInterval(() => {
+                        window.location.reload();
+                    }, 1100);
                 })
                 .catch((error) => {
                     showError(error.response.data.message);

@@ -11,33 +11,20 @@ import GlobalLoader from "./loader/GlobalLoader.js";
 import { setupAxiosInterceptors } from "./api/axios.js"
 
 
-const AxiosInterceptorSetup = ({ children }) => {
-  const { showLoader, hideLoader } = useLoader();
-
-  React.useEffect(() => {
-    setupAxiosInterceptors(showLoader, hideLoader);
-  }, [showLoader, hideLoader]);
-
-  return children;
-};
-
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 
 
   <LoaderProvider>
-    <AxiosInterceptorSetup>
-      <GlobalLoader />
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </AxiosInterceptorSetup>
+
+    <GlobalLoader />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+
   </LoaderProvider>
 
-  // <BrowserRouter>
-  //   <App />
-  // </BrowserRouter>
+
 
 );
 

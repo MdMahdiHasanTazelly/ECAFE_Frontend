@@ -15,8 +15,6 @@ const UserProfilePopup = ({ userId, onClose, onLogout }) => {
 
     if (userId) {
 
-      //console.log(userId);
-      //axios.get(`${process.env.REACT_APP_BACKEND_URL}/profile/${userId}`)
       axiosInstance.get(`/profile/${userId}`)
         .then((res) => {
           // console.log(res.data);
@@ -36,6 +34,7 @@ const UserProfilePopup = ({ userId, onClose, onLogout }) => {
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [onClose]);
+
 
   return (
     <div className="user-profile-popup" ref={popupRef}>

@@ -34,8 +34,6 @@ const Register = () => {
                 console.log(error);
             })
 
-
-
         setEmail("");
         setPassword("");
         setUsername("");
