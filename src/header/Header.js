@@ -6,6 +6,8 @@ import CartSidebar from '../cartSidebar/CartSidebar.js';
 import UserProfilePopup from '../userProfile/UserProfilepopUp.js';
 import './Header.css';
 
+import axiosInstance from '../api/axios.js';
+
 import { useNotification } from '../context/NotificationContext.js';
 
 
@@ -20,7 +22,8 @@ const Header = ({ cartItems, userId }) => {
     const logoutHandler = (e) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/logout`, { token })
+        //axios.post(`${process.env.REACT_APP_BACKEND_URL}/logout`, { token })
+        axiosInstance.post(`/logout`, { token })
             .then((res) => {
                 localStorage.removeItem("token");
                 showSuccess(res.data.message);

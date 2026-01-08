@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import './CartSidebar.css';
 import axios from 'axios';
 
+import axiosInstance from '../api/axios.js';
+
 import { useNotification } from '../context/NotificationContext.js';
 
 
@@ -17,7 +19,8 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
     useEffect(() => {
 
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/get-orders`, { token })
+        //axios.post(`${process.env.REACT_APP_BACKEND_URL}/get-orders`, { token })
+        axiosInstance.post(`/get-orders`, { token })
             .then((res) => {
                 //console.log(res.data);
                 setOrders(res.data);
@@ -31,12 +34,13 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
     const quantityUpdatehandler = (itemId, quantity) => {
 
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/update-quantity`, { quantity, itemId, token })
+        //axios.post(`${process.env.REACT_APP_BACKEND_URL}/update-quantity`, { quantity, itemId, token })
+        axiosInstance.post(`/update-quantity`, { quantity, itemId, token })
             .then((res) => {
                 showSuccess(res.data.message);
-                setInterval(() => {
-                    window.location.reload();
-                }, 1100);
+                // setInterval(() => {
+                //     window.location.reload();
+                // }, 1100);
 
             })
             .catch((error) => {
@@ -51,12 +55,13 @@ const CartSidebar = ({ isOpen, onClose }) => {
     const handleRemove = async (orderId) => {
         const token = localStorage.getItem('token');
         try {
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/remove-from-cart`, { token, orderId })
+            //axios.post(`${process.env.REACT_APP_BACKEND_URL}/remove-from-cart`, { token, orderId })
+            axiosInstance.post(`/remove-from-cart`, { token, orderId })
                 .then((res) => {
                     showSuccess(res.data.message);
-                    setInterval(() => {
-                        window.location.reload();
-                    }, 1100);
+                    // setInterval(() => {
+                    //     window.location.reload();
+                    // }, 1100);
                 })
                 .catch((error) => {
                     showError(error.response.data.message);

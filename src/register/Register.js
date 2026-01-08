@@ -2,6 +2,8 @@ import "./Register.css";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
+import axiosInstance from "../api/axios.js";
+
 import React, { useState } from 'react';
 
 import { useNotification } from '../context/NotificationContext.js';
@@ -20,7 +22,8 @@ const Register = () => {
         // Handle login logic here
         // console.log({ email, password, username });
 
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/register`, { username, email, password })
+        //axios.post(`${process.env.REACT_APP_BACKEND_URL}/register`, { username, email, password })
+        axiosInstance.post(`/register`, { username, email, password })
             .then((res) => {
                 localStorage.setItem('token', res.data.token);
                 navigate("/menu");

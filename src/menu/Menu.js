@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Menu.css';
 import Header from '../header/Header.js';
-
+import axiosInstance from '../api/axios.js';
 
 import { useNotification } from '../context/NotificationContext.js';
+
 
 
 const Menu = () => {
@@ -27,7 +28,8 @@ const Menu = () => {
     useEffect(() => {
         //const token = localStorage.getItem('token');
 
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getAllFood`, { token })
+        // axios.post(`${process.env.REACT_APP_BACKEND_URL}/getAllFood`, { token })
+        axiosInstance.post(`/getAllFood`, { token })
             .then((res) => {
                 //console.log(res);
                 //when user logged in, if executes
@@ -68,14 +70,15 @@ const Menu = () => {
 
         const itemQuantity = quantity[foodId];
 
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/add-to-cart`, { token, foodId, itemQuantity })
+        //axios.post(`${process.env.REACT_APP_BACKEND_URL}/add-to-cart`, { token, foodId, itemQuantity })
+        axiosInstance.post(`/add-to-cart`, { token, foodId, itemQuantity })
             .then((res => {
                 showSuccess(res.data.message);
                 setCartItems(prev => [...prev, res.data.order]);
 
-                setInterval(() => {
-                    window.location.reload();
-                }, 1100);
+                // setInterval(() => {
+                //     window.location.reload();
+                // }, 1100);
 
             }))
             .catch((error) => {
@@ -88,7 +91,8 @@ const Menu = () => {
 
     const handleAddToFavourite = (foodId) => {
 
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/add-to-favourite`, { token, foodId })
+        //axios.post(`${process.env.REACT_APP_BACKEND_URL}/add-to-favourite`, { token, foodId })
+        axiosInstance.post(`/add-to-favourite`, { token, foodId })
             .then((res => {
                 showSuccess(res.data.message);
                 setFavourites(res.data.favourites);
@@ -103,7 +107,8 @@ const Menu = () => {
 
     const handleRemoveFromFavourite = (foodId) => {
 
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/remove-from-favourite`, { token, foodId })
+        //axios.post(`${process.env.REACT_APP_BACKEND_URL}/remove-from-favourite`, { token, foodId })
+        axiosInstance.post(`/remove-from-favourite`, { token, foodId })
             .then((res) => {
                 showSuccess(res.data.message);
                 setFavourites(res.data.favourites);

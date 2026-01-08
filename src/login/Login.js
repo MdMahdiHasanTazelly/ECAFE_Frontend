@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { useEffect } from 'react';
 
+import axiosInstance from "../api/axios.js";
+
 import React, { useState } from 'react';
 import { useNotification } from '../context/NotificationContext.js';
 
@@ -16,7 +18,8 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, { email, password })
+        // axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, { email, password })
+        axiosInstance.post(`/login`, { email, password })
             .then((res) => {
                 localStorage.setItem('token', res.data.token);
                 navigate("/menu");

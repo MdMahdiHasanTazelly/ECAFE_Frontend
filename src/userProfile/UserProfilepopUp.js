@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "./UserProfilePopup.css";
 import axios from "axios";
 
+import axiosInstance from "../api/axios.js";
+
 const UserProfilePopup = ({ userId, onClose, onLogout }) => {
   const popupRef = useRef(null);
 
@@ -14,7 +16,8 @@ const UserProfilePopup = ({ userId, onClose, onLogout }) => {
     if (userId) {
 
       //console.log(userId);
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/profile/${userId}`)
+      //axios.get(`${process.env.REACT_APP_BACKEND_URL}/profile/${userId}`)
+      axiosInstance.get(`/profile/${userId}`)
         .then((res) => {
           // console.log(res.data);
           setUser(res.data);
