@@ -1,3 +1,8 @@
+.quantity-selector.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 .breakfast-menu {
     padding: 20px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

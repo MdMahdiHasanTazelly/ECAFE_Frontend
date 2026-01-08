@@ -12,7 +12,6 @@ const Menu = () => {
 
     const { showSuccess, showError } = useNotification();
 
-
     const [foods, setFoods] = useState([]);
     const [quantity, setQuantity] = useState({});
 
@@ -74,6 +73,8 @@ const Menu = () => {
             .then((res => {
                 showSuccess(res.data.message);
                 setCartItems(prev => [...prev, res.data.order]);
+
+                console.log(cartItems);
 
                 setInterval(() => {
                     window.location.reload();
@@ -138,7 +139,11 @@ const Menu = () => {
                             </div>
 
                             <div className="actions">
-                                <div className="quantity-selector">
+                                {/* If the item is added to cart, quantity can't be changed from menu */}
+                                <div className={`quantity-selector 
+                                ${cartItems.some(cartItem => cartItem.foodId.toString() === item._id.toString()) ?
+                                        "disabled" : ""}`}
+                                >
                                     <button onClick={() => handleQuantityChange(item._id, -1)}>-</button>
                                     <span>{quantity[item._id] || 0}</span>
                                     <button onClick={() => handleQuantityChange(item._id, 1)}>+</button>
