@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import './Menu.css';
 import Header from '../header/Header.js';
 import axiosInstance from '../api/axios.js';
@@ -22,6 +21,9 @@ const Menu = () => {
 
     const [userId, setUserId] = useState("");
 
+    const [loading, setLoading] = useState(true);
+
+
     const token = localStorage.getItem('token');
 
     useEffect(() => {
@@ -29,22 +31,27 @@ const Menu = () => {
         // axios.post(`${process.env.REACT_APP_BACKEND_URL}/getAllFood`, { token })
         axiosInstance.post(`/getAllFood`, { token })
             .then((res) => {
-                //console.log(res);
+                console.log(res);
                 //when user logged in, if executes
                 if (res.data.foods && res.data.favourites && res.data.orders && res.data.userId) {
                     setFoods(res.data.foods);
                     setFavourites(res.data.favourites);
                     setCartItems(res.data.orders);
                     setUserId(res.data.userId);
+
+                    // setting the quatity for each item(for logged in user)
+                    const initQuantity = {};
+                    res.data.foods.forEach(item => {
+                        initQuantity[item._id] = 0;
+                    });
+                    setQuantity(initQuantity);
+
                 } else { //when user is not logged in
                     setFoods(res.data);
                 }
 
-                const initQuantity = {};
-                res.data.foods.forEach(item => {
-                    initQuantity[item._id] = 0;
-                });
-                setQuantity(initQuantity);
+
+                setLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -126,13 +133,9 @@ const Menu = () => {
         <>
             <Header cartItems={cartItems} userId={userId} />
 
-            {foods.length === 0 ?
+            {loading ?
                 <div className='menu-loader-container'>
-
-
-                    <div class="spinner-grow text-success" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
+                    {console.log(loading)}
 
                     <div class="spinner-grow text-success" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -146,11 +149,15 @@ const Menu = () => {
                         <span class="visually-hidden">Loading...</span>
                     </div>
 
+                    <div class="spinner-grow text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
 
-                </div> :
+                :
 
                 <div className="breakfast-menu">
-
+                    {console.log(loading)}
                     <div className="menu-grid">
                         {foods.map(item => (
                             <div key={item._id} className='menu-card '>
@@ -210,7 +217,6 @@ const Menu = () => {
                         ))}
                     </div>
                 </div>
-
 
             }
 
