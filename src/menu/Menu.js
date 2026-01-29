@@ -125,67 +125,85 @@ const Menu = () => {
     return (
         <>
             <Header cartItems={cartItems} userId={userId} />
-            <div className="breakfast-menu">
 
-                <div className="menu-grid">
-                    {foods.map(item => (
-                        <div key={item._id} className='menu-card '>
-                            {/* {item.discount && <span className="discount-badge">-{item.discount}</span>} */}
-                            <img src={item.image} alt={item.title} className="menu-image" />
-                            <h3 className="menu-title">{item.title || '\u00A0'}</h3>
-                            <div className="price">
-                                {item.originalPrice && <span className="original-price">৳{item.originalPrice}</span>}
-                                <span className="discounted-price">৳{item.discountedPrice}</span>
-                            </div>
+            {foods.length === 0 ?
+                <div className='menu-loader-container'>
+                    {/* <h1>Empty Menu</h1> */}
 
-                            <div className="actions">
-                                {/* If the item is added to cart, quantity can't be changed from menu */}
-                                <div className={`quantity-selector 
-                                ${cartItems.some(cartItem => cartItem.foodId.toString() === item._id.toString()) ?
-                                        "disabled" : ""}`}
-                                >
-                                    <button onClick={() => handleQuantityChange(item._id, -1)}>-</button>
-                                    <span>{quantity[item._id] || 0}</span>
-                                    <button onClick={() => handleQuantityChange(item._id, 1)}>+</button>
+                    <div class="spinner-grow text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+
+                </div> :
+
+                <div className="breakfast-menu">
+
+                    <div className="menu-grid">
+                        {foods.map(item => (
+                            <div key={item._id} className='menu-card '>
+                                {/* {item.discount && <span className="discount-badge">-{item.discount}</span>} */}
+                                <img src={item.image} alt={item.title} className="menu-image" />
+                                <h3 className="menu-title">{item.title || '\u00A0'}</h3>
+                                <div className="price">
+                                    {item.originalPrice && <span className="original-price">৳{item.originalPrice}</span>}
+                                    <span className="discounted-price">৳{item.discountedPrice}</span>
                                 </div>
-                                {/* favourite */}
-                                <button className="favorite-btn"                                >
-                                    {(favourites.includes(item._id)) ?
-                                        <i class="bi bi-heart-fill" style={{ color: "#28a745" }}
-                                            onClick={() => handleRemoveFromFavourite(item._id)}
-                                        ></i> :
 
-                                        <i style={{ color: "#28a745" }} class="bi bi-suit-heart"
-                                            onClick={() => handleAddToFavourite(item._id)}
-                                        ></i>
-                                    }
+                                <div className="actions">
+                                    {/* If the item is added to cart, quantity can't be changed from menu */}
+                                    <div className={`quantity-selector 
+                                ${cartItems.some(cartItem => cartItem.foodId.toString() === item._id.toString()) ?
+                                            "disabled" : ""}`}
+                                    >
+                                        <button onClick={() => handleQuantityChange(item._id, -1)}>-</button>
+                                        <span>{quantity[item._id] || 0}</span>
+                                        <button onClick={() => handleQuantityChange(item._id, 1)}>+</button>
+                                    </div>
+                                    {/* favourite */}
+                                    <button className="favorite-btn"                                >
+                                        {(favourites.includes(item._id)) ?
+                                            <i class="bi bi-heart-fill" style={{ color: "#28a745" }}
+                                                onClick={() => handleRemoveFromFavourite(item._id)}
+                                            ></i> :
 
-                                </button>
-                                {/* add to cart */}
-                                <button className="cart-btn"
-                                    onClick={() => handleAddToCart(item._id)}
-                                >
+                                            <i style={{ color: "#28a745" }} class="bi bi-suit-heart"
+                                                onClick={() => handleAddToFavourite(item._id)}
+                                            ></i>
+                                        }
 
-                                    {/* shows if the item is added to cart or not */}
-                                    {(() => {
-                                        const isInCart = cartItems.some(order =>
-                                            order.ownerId.toString() === userId.toString() &&
-                                            order.foodId.toString() === item._id.toString()
-                                        );
+                                    </button>
+                                    {/* add to cart */}
+                                    <button className="cart-btn"
+                                        onClick={() => handleAddToCart(item._id)}
+                                    >
 
-                                        return isInCart ?
-                                            <i class="bi bi-cart-plus-fill" style={{ color: "#28a745" }}></i> :
-                                            <i className="bi bi-cart-plus" style={{ color: "#28a745" }}></i>;
-                                    })()}
+                                        {/* shows if the item is added to cart or not */}
+                                        {(() => {
+                                            const isInCart = cartItems.some(order =>
+                                                order.ownerId.toString() === userId.toString() &&
+                                                order.foodId.toString() === item._id.toString()
+                                            );
+
+                                            return isInCart ?
+                                                <i class="bi bi-cart-plus-fill" style={{ color: "#28a745" }}></i> :
+                                                <i className="bi bi-cart-plus" style={{ color: "#28a745" }}></i>;
+                                        })()}
 
 
-                                </button>
+                                    </button>
+                                </div>
+
                             </div>
-
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-            </div>
+
+
+            }
+
+
+
+
 
         </>
     );
