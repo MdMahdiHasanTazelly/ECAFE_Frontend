@@ -1,4 +1,4 @@
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Footer from "./footer/Footer.js";
 import Header from "./header/Header.js";
 import Home from "./home/Home.js";

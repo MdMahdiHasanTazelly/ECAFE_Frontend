@@ -128,11 +128,24 @@ const Menu = () => {
 
             {foods.length === 0 ?
                 <div className='menu-loader-container'>
-                    {/* <h1>Empty Menu</h1> */}
+
 
                     <div class="spinner-grow text-success" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
+
+                    <div class="spinner-grow text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+
+                    <div class="spinner-grow text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+
+                    <div class="spinner-grow text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+
 
                 </div> :
 
